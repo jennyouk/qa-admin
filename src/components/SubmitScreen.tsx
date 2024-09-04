@@ -12,7 +12,7 @@ const SubmitScreen: React.FC = () => {
   return (
     <Card>
       <Typography variant="h3" my={2}>
-        {success ? "Submission Successful!" : "There was an error"}
+        {success ? "Success!" : "There was an error"}
       </Typography>
       <Typography variant="body1" mb={4}>
         {message}

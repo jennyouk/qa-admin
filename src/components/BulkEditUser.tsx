@@ -37,11 +37,11 @@ const BulkCreateUser: React.FC = () => {
       setTimeout(() => {
         navigate("/admin/submitted", {
           state: isSuccessful
-            ? { success: true, message: "15 users created successfully" }
+            ? { success: true, message: "12 users updated successfully" }
             : {
                 success: false,
                 message:
-                  "Failed to add rows 5, 7, 9. Please check user details for those rows and resubmit",
+                  "Failed to update rows 2, 3, 6. Please check user details for those rows and resubmit",
               },
         });
       }, 500);
@@ -53,7 +53,7 @@ const BulkCreateUser: React.FC = () => {
   return (
     <Card>
       <Typography variant="h3" my={2}>
-        Bulk Create Users
+        Bulk Edit Users
       </Typography>
       <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column" gap={2} width="100%" my={3}>
@@ -65,7 +65,7 @@ const BulkCreateUser: React.FC = () => {
           >
             <Box>
               <Typography variant="body1">
-                Upload CSV file of users and user details.
+                Upload updated CSV file of users and user details.
               </Typography>
               <Typography variant="body2">
                 {selectedFile !== null && `${selectedFile.name} selected`}
@@ -78,7 +78,7 @@ const BulkCreateUser: React.FC = () => {
               tabIndex={-1}
               startIcon={<CloudUploadIcon />}
             >
-              Select File
+              Select file
               <VisuallyHiddenInput type="file" onChange={handleFileChange} />
             </Button>
           </Box>

@@ -16,6 +16,7 @@ interface ControlledTextFieldProps {
   rules: RegisterOptions | undefined;
   width: string;
   errors: FieldErrors;
+  defaultValue?: string;
 }
 
 export default function ControlledTextField({
@@ -26,12 +27,13 @@ export default function ControlledTextField({
   rules,
   width,
   errors,
+  defaultValue='',
 }: ControlledTextFieldProps) {
   return (
     <Controller
       name={name}
       control={control}
-      defaultValue=""
+      defaultValue={defaultValue}
       render={({ field }) => (
         <>
           <TextField
