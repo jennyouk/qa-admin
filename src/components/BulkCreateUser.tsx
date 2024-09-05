@@ -55,13 +55,14 @@ const BulkCreateUser: React.FC = () => {
       <Typography variant="h3" my={2}>
         Bulk Create Users
       </Typography>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ width: "80%" }}>
         <Box display="flex" flexDirection="column" gap={2} width="100%" my={3}>
           <Box
             display="flex"
-            justifyContent="space-around"
-            gap={2}
+            justifyContent="space-between"
             width="100%"
+            padding={3}
+            sx={{ p: 2, border: '1px dashed grey' }}
           >
             <Box>
               <Typography variant="body1">

@@ -19,6 +19,7 @@ import {
 import ControlledTextField from "./ControlledTextField";
 import Card from "./Card";
 import { useNavigate } from "react-router-dom";
+import { clientList, userRoles } from "../lib/constants";
 
 const CreateUser: React.FC = () => {
   const {
@@ -31,26 +32,40 @@ const CreateUser: React.FC = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const userRoles = [
-    { value: "user", label: "User" },
-    { value: "admin", label: "Admin" },
-    { value: "tester", label: "Tester" },
-  ];
-
-  const clientList = ["client1", "client2", "client3", "client4"];
-
-  const onSubmit: SubmitHandler<FieldValues> = async (data: unknown) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (
+    data: Record<string, unknown>
+  ) => {
     setIsPending(true);
-    const isSuccessful = Math.random() < 0.5;
-    setTimeout(() => {
-      console.log("submitting", data);
+    const body = {
+      ...data,
+      last_login: null,
+      last_password_change: null,
+    };
+    // const isSuccessful = Math.random() < 0.5;
+    // setTimeout(() => {
+    //   console.log("submitting", data);
+    //   setIsPending(false);
+    // }, 500);
+    try {
+      const response = await fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(body),
+      });
+      const result = await response.json();
+      navigate("/admin/submitted", {
+        state: response.ok
+          ? { success: true, message: "User created successfully" }
+          : { success: false, message: result.error },
+      });
+    } catch (error) {
+      console.error("Failed to create user", error);
+    } finally {
       setIsPending(false);
-    }, 500);
-    navigate("/admin/submitted", {
-      state: isSuccessful
-        ? { success: true, message: "User created successfully" }
-        : { success: false, message: "Duplicate user details" },
-    });
+    }
   };
 
   return (
@@ -66,6 +81,7 @@ const CreateUser: React.FC = () => {
           justifyContent="center"
           alignItems="center"
           flexDirection="column"
+          // width="inherit"
         >
           <ControlledTextField
             name="email"
@@ -81,7 +97,7 @@ const CreateUser: React.FC = () => {
                 message: "Please enter a valid email",
               },
             }}
-            placeholder="Email"
+            label="Email"
           />
           <Box display="flex" gap="16px" width="100%">
             <ControlledTextField
@@ -90,7 +106,7 @@ const CreateUser: React.FC = () => {
               register={register}
               width="50%"
               errors={errors}
-              placeholder="First name"
+              label="First name"
               rules={{ required: "First name is required" }}
             />
             <ControlledTextField
@@ -99,7 +115,7 @@ const CreateUser: React.FC = () => {
               register={register}
               errors={errors}
               width="50%"
-              placeholder="Last name"
+              label="Last name"
               rules={{ required: "Last name is required" }}
             />
           </Box>
@@ -110,7 +126,7 @@ const CreateUser: React.FC = () => {
               register={register}
               width="50%"
               errors={errors}
-              placeholder="Username"
+              label="Username"
               rules={{ required: "Username is required" }}
             />
             <ControlledTextField
@@ -119,7 +135,7 @@ const CreateUser: React.FC = () => {
               register={register}
               width="50%"
               errors={errors}
-              placeholder="Password"
+              label="Password"
               rules={{ required: "Password is required" }}
             />
           </Box>
@@ -136,7 +152,6 @@ const CreateUser: React.FC = () => {
               <FormControl fullWidth error={!!errors.clients}>
                 <InputLabel
                   htmlFor="client-select-list"
-                  sx={{ color: "#9E9E9E" }}
                 >
                   Select Allowed Clients
                 </InputLabel>
@@ -162,17 +177,16 @@ const CreateUser: React.FC = () => {
             )}
           />
           <Controller
-            name="userRole"
+            name="userType"
             control={control}
             defaultValue=""
             rules={{
               validate: (value) => value !== "" || "User Role must be selected",
             }}
             render={({ field }) => (
-              <FormControl error={!!errors.userRole} fullWidth>
+              <FormControl error={!!errors.userType} fullWidth>
                 <InputLabel
                   htmlFor="users-select-list"
-                  sx={{ color: "#9E9E9E" }}
                 >
                   User Role
                 </InputLabel>
@@ -195,9 +209,9 @@ const CreateUser: React.FC = () => {
                     </MenuItem>
                   ))}
                 </Select>
-                {errors.userRole && (
+                {errors.userType && (
                   <FormHelperText error>
-                    {errors.userRole.message as React.ReactNode}
+                    {errors.userType.message as React.ReactNode}
                   </FormHelperText>
                 )}
               </FormControl>

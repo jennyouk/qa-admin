@@ -12,22 +12,24 @@ interface ControlledTextFieldProps {
   control: Control;
   register: UseFormRegister<FieldValues>;
   name: string;
-  placeholder: string;
+  label: string;
   rules: RegisterOptions | undefined;
   width: string;
   errors: FieldErrors;
   defaultValue?: string;
+  disabled?: boolean;
 }
 
 export default function ControlledTextField({
   control,
   register,
   name,
-  placeholder,
+  label,
   rules,
   width,
   errors,
   defaultValue='',
+  disabled=false,
 }: ControlledTextFieldProps) {
   return (
     <Controller
@@ -40,9 +42,10 @@ export default function ControlledTextField({
             {...field}
             sx={{ width: width }}
             size="small"
-            placeholder={placeholder}
             {...register(name, rules)}
             error={!!errors[name]}
+            label={label}
+            disabled={disabled}
             helperText={errors[name]?.message as string}
           />
         </>

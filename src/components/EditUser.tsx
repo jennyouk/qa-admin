@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   useForm,
   Controller,
   SubmitHandler,
   FieldValues,
+  // set,
 } from "react-hook-form";
 import {
   Box,
@@ -15,37 +16,20 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
+  // Switch,
+  // FormLabel,
 } from "@mui/material";
 import ControlledTextField from "./ControlledTextField";
 import Card from "./Card";
-import { useNavigate } from "react-router-dom";
-
-interface UserData {
-  email: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-  password: string;
-  lastPasswordReset: string;
-  clients: string[];
-  userRole: string;
-  lastLogin: string;
-}
-// const lastPWReset = new Date(2024, 6, 1);
-
-const testUserData: UserData = {
-  clients: ["client1", "client2"],
-  email: "jenny.ouk@atomadvantage.ai",
-  firstName: "Jenny",
-  lastName: "Ouk",
-  password: "jennyspassword",
-  userRole: "tester",
-  username: "jennyouk",
-  lastPasswordReset: "2024-06-01",
-  lastLogin: "2024-09-01",
-};
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { clientList, userRoles } from "../lib/constants";
+import { User } from "../../types";
 
 const EditUser: React.FC = () => {
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const [userData, setUserData] = useState<User | undefined>(undefined);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const {
     handleSubmit,
     control,
@@ -53,33 +37,66 @@ const EditUser: React.FC = () => {
     reset,
     register,
   } = useForm();
-  const [isPending, setIsPending] = useState<boolean>(false);
-  const navigate = useNavigate();
-  
-  const userData = testUserData;
-  console.log(userData);
 
-  const userRoles = [
-    { value: "user", label: "User" },
-    { value: "admin", label: "Admin" },
-    { value: "tester", label: "Tester" },
-  ];
+  const userId = searchParams.get("id"); // Get the user ID from the URL
+  console.log("userId:", userId);
 
-  const clientList = ["client1", "client2", "client3", "client4"];
+  useEffect(() => {
+    if (!userId) {
+      navigate("/admin/search-user");
+    }
+    // Fetch user data from backend when the component mounts
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/users/${userId}`);
+        if (!response.ok) {
+          throw new Error(`Error fetching user: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setUserData(data.user);
+        console.log("data:", data);
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data: unknown) => {
+    if (userId) {
+      fetchUserData();
+    }
+  }, [userId, navigate]); // Fetch data when userId changes
+
+  const onSubmit: SubmitHandler<FieldValues> = async (
+    data: Record<string, unknown>
+  ) => {
     setIsPending(true);
-    const isSuccessful = Math.random() < 0.5;
-    setTimeout(() => {
-      console.log("submitting", data);
+    console.log("submitting", data);
+    try {
+      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      navigate("/admin/submitted", {
+        state: response.ok
+          ? { success: true, message: "User details updated successfully" }
+          : { success: false, message: result.error },
+      });
+    } catch (error) {
+      console.error("Failed to update user", error);
+      navigate("/admin/submitted", {
+        state: { success: false, message: `User update failed; ${error}` },
+      });
+    } finally {
       setIsPending(false);
-    }, 500);
-    navigate("/admin/submitted", {
-      state: isSuccessful
-        ? { success: true, message: "User details updated successfully" }
-        : { success: false, message: "User update failed" },
-    });
+    }
   };
+
+  if (!userData) {
+    return <CircularProgress />; // Show a loader while fetching user data
+  }
 
   return (
     <Card>
@@ -110,7 +127,7 @@ const EditUser: React.FC = () => {
                 message: "Please enter a valid email",
               },
             }}
-            placeholder="Email"
+            label="Email"
           />
           <Box display="flex" gap="16px" width="100%">
             <ControlledTextField
@@ -119,7 +136,7 @@ const EditUser: React.FC = () => {
               register={register}
               width="50%"
               errors={errors}
-              placeholder="First name"
+              label="First name"
               defaultValue={userData.firstName}
               rules={{ required: "First name is required" }}
             />
@@ -129,7 +146,7 @@ const EditUser: React.FC = () => {
               register={register}
               errors={errors}
               width="50%"
-              placeholder="Last name"
+              label="Last name"
               defaultValue={userData.lastName}
               rules={{ required: "Last name is required" }}
             />
@@ -141,9 +158,10 @@ const EditUser: React.FC = () => {
               register={register}
               width="50%"
               errors={errors}
-              placeholder="Username"
+              label="Username"
               defaultValue={userData.username}
               rules={{ required: "Username is required" }}
+              disabled={true}
             />
             <ControlledTextField
               name="password"
@@ -151,12 +169,12 @@ const EditUser: React.FC = () => {
               register={register}
               width="50%"
               errors={errors}
-              placeholder="Password"
+              label="Password"
               defaultValue={userData.password}
               rules={{ required: "Password is required" }}
             />
             <Typography variant="body2" sx={{ color: "#9E9E9E" }}>
-              Last Password Reset: {userData.lastPasswordReset}
+              Last Password Reset: 2024-06-24{userData.lastPasswordChange}
             </Typography>
           </Box>
 
@@ -198,14 +216,14 @@ const EditUser: React.FC = () => {
             )}
           />
           <Controller
-            name="userRole"
+            name="userType"
             control={control}
-            defaultValue={userData.userRole}
+            defaultValue={userData.userType}
             rules={{
               validate: (value) => value !== "" || "User Role must be selected",
             }}
             render={({ field }) => (
-              <FormControl error={!!errors.userRole} fullWidth>
+              <FormControl error={!!errors.userType} fullWidth>
                 <InputLabel
                   htmlFor="users-select-list"
                   sx={{ color: "#9E9E9E" }}
@@ -240,8 +258,124 @@ const EditUser: React.FC = () => {
             )}
           />
           <Typography variant="body2" sx={{ color: "#9E9E9E" }}>
-            Last Login: {userData.lastLogin}
+            Last Login: 2024-09-03{userData.lastLogin}
           </Typography>
+          {/* <Controller
+            name="active"
+            control={control}
+            defaultValue={userData.active}
+            render={({ field }) => (
+              <FormControl error={!!errors.active}>
+                <FormLabel htmlFor="active-switch" sx={{ color: "#9E9E9E" }}>
+                  {userData.active ? "Deactivate" : "Activate"}
+                  <Switch
+                    {...field}
+                    id="active-switch"
+                    checked={userData.active}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                      setUserData({ ...userData, active: event.target.checked })
+                    }
+                  />
+                </FormLabel>
+              </FormControl>
+            )}
+          /> */}
+          {/* <Controller
+            name="active"
+            control={control}
+            defaultValue={userData.active}
+            rules={{
+              validate: (value) =>
+                value !== "" || "Active status must be selected",
+            }}
+            render={({ field }) => (
+              <FormControl error={!!errors.userType} fullWidth>
+                <InputLabel
+                  htmlFor="active-select-list"
+                  sx={{ color: "#9E9E9E" }}
+                >
+                  Active Status
+                </InputLabel>
+                <Select
+                  {...field}
+                  id="active-select-list"
+                  label="User Status"
+                  // defaultValue={userData.active ? "Active" : "Deactivated"}
+
+                  sx={{
+                    color: field.value === "none" ? "#9E9E9E" : "black",
+                    "&.Mui-error .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "error.main",
+                    },
+                  }}
+                >
+                  {[
+                    { value: "active", label: "Active" },
+                    { value: "deactived", label: "Deactived" },
+                  ].map((item, idx) => (
+                    <MenuItem value={item.value.toString()} key={idx}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.active && (
+                  <FormHelperText error>
+                    {errors.active.message as React.ReactNode}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            )}
+          /> */}
+          <Controller
+            name="active"
+            control={control}
+            defaultValue={userData.active}
+            render={({ field }) => (
+              <FormControl error={!!errors.active} fullWidth>
+                <InputLabel
+                  htmlFor="active-select-list"
+                  sx={{ color: "#9E9E9E" }}
+                >
+                  Active Status
+                </InputLabel>
+                <Select
+                  {...field}
+                  id="active-select-list"
+                  label="Active Status"
+                  onChange={(e) => field.onChange(e.target.value === "active")} // Here we transform the value before passing it
+                  value={field.value ? "active" : "deactivated"} // Handle how the value is displayed based on the boolean
+                  sx={{
+                    color: field.value === "none" ? "#9E9E9E" : "black",
+                    "&.Mui-error .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "error.main",
+                    },
+                  }}
+                >
+                  <MenuItem value="active">Active</MenuItem>
+                  <MenuItem value="deactivated">Deactivated</MenuItem>
+                </Select>
+                {errors.active && (
+                  <FormHelperText error>
+                    {errors.active.message as React.ReactNode}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            )}
+          />
+          <Button
+            disabled={!userData.active}
+            variant="contained"
+            onClick={() => {
+              setUserData((prev) => {
+                if (prev) {
+                  return { ...prev, active: false };
+                }
+                return prev;
+              });
+            }}
+          >
+            Deactivate User
+          </Button>
           <Box display="flex" gap="16px" my={2}>
             <Button type="submit" disabled={isPending} variant="contained">
               {isPending ? (

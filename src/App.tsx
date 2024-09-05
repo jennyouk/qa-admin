@@ -55,6 +55,11 @@ function App() {
         color: "#545454",
         fontWeight: 600,
       },
+      h4: {
+        fontSize: 28,
+        color: "#6b6b6b",
+        fontWeight: 600,
+      },
     },
     components: {
       MuiCssBaseline: {
@@ -73,6 +78,9 @@ function App() {
             padding: 0,
             textAlign: "left",
           },
+          form: {
+            width: "100%",
+          },
         },
       },
     },
@@ -83,8 +91,6 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          {/* <Route path="demo" element={<MiniDrawer />} /> */}
-          {/* <Route path="/admin" Component={AdminMenu} /> */}
           <Route path="admin" element={<AdminPage />}>
             <Route index element={<AdminMenu />} />
             <Route path="create-user" element={<CreateUser />} />
@@ -94,14 +100,8 @@ function App() {
             <Route path="bulk-edit-user" element={<BulkEditUser />} />
             <Route path="export-users" element={<ExportUsers />} />*
             <Route path="submitted" element={<SubmitScreen />} />
-            <Route path="*" element={<CreateUser />} />
+            <Route path="*" element={<AdminPage />} />
           </Route>
-          {/* <Route path="/">
-          <Routes
-            path="/"
-            element={<Navigate to={token ? "/home" : "/login"} />}
-          />
-        </Route> */}
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
