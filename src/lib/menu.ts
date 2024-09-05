@@ -2,7 +2,6 @@ import React from "react";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-import EditIcon from "@mui/icons-material/Edit";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
@@ -12,7 +11,7 @@ export const menuList = [
     link: "create-user",
     label: "Create User",
     description:
-      "Add a new user to the system including email, name, username, password, role, and allowed clients",
+      "Add a new user to the system including email, name, username, role, and allowed clients",
   },
   {
     icon: React.createElement(GroupAddIcon),
@@ -23,14 +22,8 @@ export const menuList = [
   {
     icon: React.createElement(PersonSearchIcon),
     link: "search-user",
-    label: "Search User",
-    description: "Find a user in the system and view their details",
-  },
-  {
-    icon: React.createElement(EditIcon),
-    link: "edit-user",
-    label: "Edit User",
-    description: "Modify user details such as name, role, and allowed clients",
+    label: "Find/Edit User",
+    description: "Find a user in the system and view or edit their details",
   },
   {
     icon: React.createElement(EditNoteIcon),

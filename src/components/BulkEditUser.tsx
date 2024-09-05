@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Box, CircularProgress, Typography } from "@mui/material";
+import { Button, Box, CircularProgress, Typography, Grid } from "@mui/material";
 import Card from "./Card";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
@@ -55,54 +55,63 @@ const BulkCreateUser: React.FC = () => {
       <Typography variant="h3" my={2}>
         Bulk Edit Users
       </Typography>
-
       <form onSubmit={handleSubmit} style={{ width: "80%" }}>
-        <Box display="flex" flexDirection="column" gap={2} width="100%" my={3}>
-          <Box
+      <Grid
+          container
+          columnSpacing={1}
+          sx={{ padding: { xs: 1, md: 3 }, my: 1, border: "1px dashed grey" }}
+        >
+          <Grid
+            item
+            xs={12}
+            md={8}
             display="flex"
-            justifyContent="space-between"
-            width="100%"
-            padding={3}
-            sx={{ p: 2, border: '1px dashed grey' }}
+            flexDirection="column"
+            alignItems={{ xs: "center", md: "flex-start" }}
+            sx={{ mb: { xs: 2, md: 0 }}}
           >
-            <Box>
-              <Typography variant="body1">
-                Upload updated CSV file of users and user details.
-              </Typography>
-              <Typography variant="body2">
-                {selectedFile !== null && `${selectedFile.name} selected`}
-              </Typography>
-            </Box>
+            <Typography variant="body1">
+              Upload updated user details as CSV file
+            </Typography>
+            <Typography variant="body2" color="primary">
+              {selectedFile !== null && `${selectedFile.name} selected`}
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={4}
+            display="flex"
+            justifyContent={{ xs: "center", md: "flex-end" }}
+          >
             <Button
               component="label"
               role={undefined}
               variant="contained"
               tabIndex={-1}
               startIcon={<CloudUploadIcon />}
+              sx={{
+                whiteSpace: "nowrap",
+              }}
             >
               Select file
               <VisuallyHiddenInput type="file" onChange={handleFileChange} />
             </Button>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            mt={8}
+          </Grid>
+        </Grid>
+        <Box display="flex" justifyContent="center" alignItems="center" mt={8}>
+          <Button
+            type="submit"
+            disabled={isPending}
+            variant="contained"
+            sx={{ width: "200px" }}
           >
-            <Button
-              type="submit"
-              disabled={isPending}
-              variant="contained"
-              sx={{ width: "200px" }}
-            >
-              {isPending ? (
-                <CircularProgress size={24} style={{ color: "white" }} />
-              ) : (
-                "Save"
-              )}
-            </Button>
-          </Box>
+            {isPending ? (
+              <CircularProgress size={24} style={{ color: "white" }} />
+            ) : (
+              "Save"
+            )}
+          </Button>
         </Box>
       </form>
     </Card>

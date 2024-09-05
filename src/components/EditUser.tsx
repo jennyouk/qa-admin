@@ -34,7 +34,6 @@ const EditUser: React.FC = () => {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
     register,
   } = useForm();
 
@@ -162,16 +161,6 @@ const EditUser: React.FC = () => {
               defaultValue={userData.username}
               rules={{ required: "Username is required" }}
               disabled={true}
-            />
-            <ControlledTextField
-              name="password"
-              control={control}
-              register={register}
-              width="50%"
-              errors={errors}
-              label="Password"
-              defaultValue={userData.password}
-              rules={{ required: "Password is required" }}
             />
             <Typography variant="body2" sx={{ color: "#9E9E9E" }}>
               Last Password Reset: 2024-06-24{userData.lastPasswordChange}
@@ -362,7 +351,7 @@ const EditUser: React.FC = () => {
               </FormControl>
             )}
           />
-          <Button
+          {/* <Button
             disabled={!userData.active}
             variant="contained"
             onClick={() => {
@@ -375,7 +364,7 @@ const EditUser: React.FC = () => {
             }}
           >
             Deactivate User
-          </Button>
+          </Button> */}
           <Box display="flex" gap="16px" my={2}>
             <Button type="submit" disabled={isPending} variant="contained">
               {isPending ? (
@@ -387,7 +376,7 @@ const EditUser: React.FC = () => {
             <Button
               disabled={isPending}
               variant="contained"
-              onClick={() => reset()}
+              onClick={() => navigate("/admin")}
             >
               Cancel
             </Button>

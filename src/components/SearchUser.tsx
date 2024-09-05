@@ -144,11 +144,17 @@ export default function SearchUser() {
               <Grid item xs={3}>
                 First Name
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={2}>
                 Last Name
               </Grid>
-              <Grid item xs={1}>
-                View/Edit
+              <Grid
+                item
+                xs={2}
+                display="flex"
+                justifyContent="end"
+                textAlign="right"
+              >
+                View / Edit
               </Grid>
             </Grid>
             {foundUsers.map((user: User, idx) => (

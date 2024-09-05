@@ -12,17 +12,11 @@ export default function AdminMenu() {
       <Typography variant="h3" my={3}>
         User Management Menu
       </Typography>
-      <Grid
-        container
-        // spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 4, sm: 8, md: 12 }}
-      >
+      <Grid container >
         {menuList.map((item, index) => (
-          <Grid key={index} item xs={2} sm={4} md={4}>
+          <Grid key={index} item xs={12} sm={6} md={4}>
             <CardActionArea
-              sx={{ padding: 3,
-                // "&:hover": { backgroundColor: "#f9f4ef" }
-              }}
+              sx={{ padding: 3 }}
               onClick={() => navigate(`/admin/${item.link}`)}
             >
               <Icon>{item.icon}</Icon>

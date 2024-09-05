@@ -13,7 +13,7 @@ export default function Card({ children }: { children: React.ReactNode }) {
       sx={{
         width: {
           xs: "100%",
-          lg: "80%",
+          md: "80%",
           xl: "70%",
         },
         maxWidth: "100%",

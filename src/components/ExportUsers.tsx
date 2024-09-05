@@ -1,43 +1,45 @@
 import { useState } from "react";
-import { Button, Box, CircularProgress, Typography } from "@mui/material";
+import { Button, Grid, CircularProgress, Typography } from "@mui/material";
 import Card from "./Card";
-// import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-// import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-
-// const VisuallyHiddenInput = styled("input")({
-//   clip: "rect(0 0 0 0)",
-//   clipPath: "inset(50%)",
-//   height: 1,
-//   overflow: "hidden",
-//   position: "absolute",
-//   bottom: 0,
-//   left: 0,
-//   whiteSpace: "nowrap",
-//   width: 1,
-// });
+import DownloadIcon from "@mui/icons-material/Download";
 
 const ExportUsers: React.FC = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const onClick = () => {
+  const onClick = async () => {
     setIsPending(true);
-    const isSuccessful = true;
-    setTimeout(() => {
+    try {
+      const response = await fetch("http://localhost:3000/export", {});
+      if (!response.ok) {
+        navigate("/admin/submitted", {
+          state: {
+            success: false,
+            message: "Users file download failed. Please try again.",
+          },
+        });
+        return;
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "users.csv";
+      a.click();
+      window.URL.revokeObjectURL(url);
       navigate("/admin/submitted", {
-        state: isSuccessful
-          ? {
-              success: true,
-              message:
-                "Users file downloaded successfully. Please see your downloads folder.",
-            }
-          : {
-              success: false,
-              message: "Users file download failed. Please try again.",
-            },
+        state: {
+          success: true,
+          message:
+            "Users file downloaded successfully. Please see your downloads folder.",
+        },
       });
-    }, 500);
+      return;
+    } catch (err) {
+      throw new Error(`Failed to export users, ${err}`);
+    }
+    setIsPending(false);
   };
 
   return (
@@ -45,40 +47,38 @@ const ExportUsers: React.FC = () => {
       <Typography variant="h3" my={2}>
         Export Users
       </Typography>
-
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        sx={{
-          py: 2,
-          px: 4,
-          border: "1px dashed grey",
-          flexDirection: { xs: "column", sm: "row" },
-          gap: { xs: 0, sm: 8 },
-        }}
+      <Grid
+        container
+        columnSpacing={1}
+        width={{ xs: "100%", md: "80%" }}
+        sx={{ padding: { xs: 1, md: 3 }, my: 1, border: "1px dashed grey" }}
       >
-        <Box
-          display="flex"
-          alignItems="center"
-          sx={{ justifyContent: { xs: "center", sm: "start" } }}
-        >
-          <Typography variant="body1" my={2}>
-            Export Users as CSV file
+        <Grid item xs={12} sm={8} display="flex" alignItems="center">
+          <Typography variant="body1">
+            Export all user and user details as a CSV file
           </Typography>
-        </Box>
-        <Button
-          onClick={onClick}
-          disabled={isPending}
-          variant="contained"
-          sx={{ width: "200px", my: 2 }}
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          display="flex"
+          justifyContent={{ xs: "center", sm: "flex-end" }}
         >
-          {isPending ? (
-            <CircularProgress size={24} style={{ color: "white" }} />
-          ) : (
-            "Export"
-          )}
-        </Button>
-      </Box>
+          <Button
+            onClick={onClick}
+            disabled={isPending}
+            variant="contained"
+            startIcon={<DownloadIcon />}
+          >
+            {isPending ? (
+              <CircularProgress size={24} style={{ color: "white" }} />
+            ) : (
+              "Export"
+            )}
+          </Button>
+        </Grid>
+      </Grid>
     </Card>
   );
 };

@@ -26,7 +26,6 @@ const CreateUser: React.FC = () => {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
     register,
   } = useForm();
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -40,12 +39,8 @@ const CreateUser: React.FC = () => {
       ...data,
       last_login: null,
       last_password_change: null,
+      active: true,
     };
-    // const isSuccessful = Math.random() < 0.5;
-    // setTimeout(() => {
-    //   console.log("submitting", data);
-    //   setIsPending(false);
-    // }, 500);
     try {
       const response = await fetch("http://localhost:3000/users", {
         method: "POST",
@@ -107,7 +102,13 @@ const CreateUser: React.FC = () => {
               width="50%"
               errors={errors}
               label="First name"
-              rules={{ required: "First name is required" }}
+              rules={{
+                required: "First name is required",
+                pattern: {
+                  value: /^[^\d!@#$%<>{}[\]&*()]+$/,
+                  message: "Please enter a valid name",
+                },
+              }}
             />
             <ControlledTextField
               name="lastName"
@@ -116,29 +117,24 @@ const CreateUser: React.FC = () => {
               errors={errors}
               width="50%"
               label="Last name"
-              rules={{ required: "Last name is required" }}
+              rules={{
+                required: "Last name is required",
+                pattern: {
+                  value: /^[^\d!@#$%<>{}[\]&*()]+$/,
+                  message: "Please enter a valid name",
+                },
+              }}
             />
           </Box>
-          <Box display="flex" gap="16px" width="100%">
-            <ControlledTextField
-              name="username"
-              control={control}
-              register={register}
-              width="50%"
-              errors={errors}
-              label="Username"
-              rules={{ required: "Username is required" }}
-            />
-            <ControlledTextField
-              name="password"
-              control={control}
-              register={register}
-              width="50%"
-              errors={errors}
-              label="Password"
-              rules={{ required: "Password is required" }}
-            />
-          </Box>
+          <ControlledTextField
+            name="username"
+            control={control}
+            register={register}
+            width="100%"
+            errors={errors}
+            label="Username"
+            rules={{ required: "Username is required" }}
+          />
 
           <Controller
             name="clients"
@@ -150,9 +146,7 @@ const CreateUser: React.FC = () => {
             }}
             render={({ field }) => (
               <FormControl fullWidth error={!!errors.clients}>
-                <InputLabel
-                  htmlFor="client-select-list"
-                >
+                <InputLabel htmlFor="client-select-list">
                   Select Allowed Clients
                 </InputLabel>
                 <Select
@@ -162,6 +156,7 @@ const CreateUser: React.FC = () => {
                   multiple
                   defaultValue={[]}
                 >
+                  <MenuItem value={clientList}>Select All</MenuItem>
                   {clientList.map((client, idx) => (
                     <MenuItem value={client} key={idx}>
                       {client}
@@ -185,11 +180,7 @@ const CreateUser: React.FC = () => {
             }}
             render={({ field }) => (
               <FormControl error={!!errors.userType} fullWidth>
-                <InputLabel
-                  htmlFor="users-select-list"
-                >
-                  User Role
-                </InputLabel>
+                <InputLabel htmlFor="users-select-list">User Role</InputLabel>
                 <Select
                   {...field}
                   id="users-select-list"
@@ -228,7 +219,7 @@ const CreateUser: React.FC = () => {
             <Button
               disabled={isPending}
               variant="contained"
-              onClick={() => reset()}
+              onClick={() => navigate("/admin")}
             >
               Cancel
             </Button>

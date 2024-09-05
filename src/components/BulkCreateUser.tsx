@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Box, CircularProgress, Typography } from "@mui/material";
+import { Button, Box, CircularProgress, Typography, Grid } from "@mui/material";
 import Card from "./Card";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
@@ -37,11 +37,15 @@ const BulkCreateUser: React.FC = () => {
       setTimeout(() => {
         navigate("/admin/submitted", {
           state: isSuccessful
-            ? { success: true, message: "15 users created successfully" }
+            ? {
+                success: true,
+                message:
+                  "Example success message: 15 users created successfully",
+              }
             : {
                 success: false,
                 message:
-                  "Failed to add rows 5, 7, 9. Please check user details for those rows and resubmit",
+                  "[Example failure message] Failed to add rows 5, 7, 9 due to incomplete user details or duplicate username or email fields. Please check user details for those rows and resubmit.",
               },
         });
       }, 500);
@@ -56,53 +60,67 @@ const BulkCreateUser: React.FC = () => {
         Bulk Create Users
       </Typography>
       <form onSubmit={handleSubmit} style={{ width: "80%" }}>
-        <Box display="flex" flexDirection="column" gap={2} width="100%" my={3}>
-          <Box
+        <Grid
+          container
+          columnSpacing={1}
+          sx={{ padding: { xs: 1, md: 3 }, my: 1, border: "1px dashed grey" }}
+        >
+          <Grid
+            item
+            xs={12}
+            md={8}
             display="flex"
-            justifyContent="space-between"
-            width="100%"
-            padding={3}
-            sx={{ p: 2, border: '1px dashed grey' }}
+            flexDirection="column"
+            alignItems={{ xs: "center", md: "flex-start" }}
+            sx={{ mb: { xs: 2, md: 0 }}}
           >
-            <Box>
-              <Typography variant="body1">
-                Upload CSV file of users and user details.
-              </Typography>
-              <Typography variant="body2">
-                {selectedFile !== null && `${selectedFile.name} selected`}
-              </Typography>
-            </Box>
+            <Typography variant="body1">
+              Upload CSV file of users and user details.
+            </Typography>
+            <Typography variant="body2" color="primary">
+              {selectedFile !== null && `${selectedFile.name} selected`}
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={4}
+            display="flex"
+            justifyContent={{ xs: "center", md: "flex-end" }}
+          >
             <Button
               component="label"
               role={undefined}
               variant="contained"
               tabIndex={-1}
               startIcon={<CloudUploadIcon />}
+              sx={{ whiteSpace: "nowrap" }}
             >
               Select File
               <VisuallyHiddenInput type="file" onChange={handleFileChange} />
             </Button>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            mt={8}
-          >
-            <Button
-              type="submit"
-              disabled={isPending}
-              variant="contained"
-              sx={{ width: "200px" }}
-            >
-              {isPending ? (
-                <CircularProgress size={24} style={{ color: "white" }} />
-              ) : (
-                "Save"
-              )}
-            </Button>
-          </Box>
+          </Grid>
+        </Grid>
+        <Box width="100%" display="flex" justifyContent="center">
+          <Typography variant="body2">
+            Tip: <a href="">Download</a> the CSV template file to get started.
+          </Typography>
         </Box>
+        <Box display="flex" justifyContent="center" alignItems="center" mt={6}>
+          <Button
+            type="submit"
+            disabled={isPending}
+            variant="contained"
+            sx={{ width: "200px" }}
+          >
+            {isPending ? (
+              <CircularProgress size={24} style={{ color: "white" }} />
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </Box>
+        {/* </Box> */}
       </form>
     </Card>
   );

@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import db from "./database.js"; // Ensure the correct file extension
+import { createObjectCsvStringifier } from "csv-writer";
 
 const app = express();
 app.use(express.json());
@@ -13,7 +14,6 @@ app.post("/users", (req, res) => {
   const {
     email,
     username,
-    password,
     firstName,
     lastName,
     clients,
@@ -24,19 +24,18 @@ app.post("/users", (req, res) => {
   } = req.body;
 
   db.run(
-    `INSERT INTO users (email, username, password, firstName, lastName, clients, userType, lastLogin, lastPasswordChange, active)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO users (email, username, firstName, lastName, clients, userType, lastLogin, lastPasswordChange, active)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
-      email,
-      username,
-      password,
+      email.toLowerCase(),
+      username.toLowerCase(),
       firstName,
       lastName,
       JSON.stringify(clients),
       userType,
       lastLogin,
       lastPasswordChange,
-      active
+      active,
     ],
     function (err) {
       if (err) {
@@ -84,17 +83,6 @@ app.get("/users", (req, res) => {
   });
 });
 
-// // Get all users
-// app.get('/users', (req, res) => {
-//     db.all('SELECT * FROM users', [], (err, rows) => {
-//         if (err) {
-//             res.status(400).json({ error: err.message });
-//             return;
-//         }
-//         res.json({ users: rows });
-//     });
-// });
-
 // Get a single user by ID
 app.get("/users/:id", (req, res) => {
   const { id } = req.params;
@@ -122,21 +110,19 @@ app.put("/users/:id", (req, res) => {
   const {
     email,
     username,
-    password,
     firstName,
     lastName,
     clients,
     userType,
     lastLogin,
     lastPasswordChange,
-    active
+    active,
   } = req.body;
   db.run(
-    `UPDATE users SET email = ?, username = ?, password = ?, firstName = ?, lastName = ?, clients = ?, userType = ?, lastLogin = ?, lastPasswordChange = ?, active = ? WHERE id = ?`,
+    `UPDATE users SET email = ?, username = ?, firstName = ?, lastName = ?, clients = ?, userType = ?, lastLogin = ?, lastPasswordChange = ?, active = ? WHERE id = ?`,
     [
-      email,
-      username,
-      password,
+      email.toLowerCase(),
+      username.toLowerCase(),
       firstName,
       lastName,
       JSON.stringify(clients),
@@ -167,6 +153,45 @@ app.put("/users/:id", (req, res) => {
 //         res.json({ message: 'User deleted', changes: this.changes });
 //     });
 // });
+
+app.get("/export", (req, res) => {
+  // Query to get column names from the 'users' table
+  db.all("PRAGMA table_info(users)", (err, columns) => {
+    if (err) {
+      res.status(500).json({ error: "Failed to retrieve column info" });
+      return;
+    }
+
+    // Extract the column ids dynamically
+    const headers = columns.map((col) => ({
+      id: col.name, // Column name
+      title: col.name, // Column name as title, you can customize if needed
+    }));
+
+    // Create CSV stringifier with dynamic headers
+    const csvStringifier = createObjectCsvStringifier({
+      header: headers,
+    });
+
+    // Fetch the actual data rows
+    db.all("SELECT * FROM users", (err, rows) => {
+      if (err) {
+        res.status(500).json({ error: "Failed to retrieve data" });
+        return;
+      }
+
+      // Convert the rows to CSV format
+      const csvContent =
+        csvStringifier.getHeaderString() +
+        csvStringifier.stringifyRecords(rows);
+
+      // Set response headers and send the CSV file
+      res.setHeader("Content-disposition", "attachment; filename=users.csv");
+      res.set("Content-Type", "text/csv");
+      res.status(200).send(csvContent);
+    });
+  });
+});
 
 // Start the server
 app.listen(port, () => {
