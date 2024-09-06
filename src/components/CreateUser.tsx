@@ -19,7 +19,8 @@ import {
 import ControlledTextField from "./ControlledTextField";
 import Card from "./Card";
 import { useNavigate } from "react-router-dom";
-import { clientList, userRoles } from "../lib/constants";
+import { userRoles } from "../lib/constants";
+import ControlledClientSelect from "./ControlledClientSelect";
 
 const CreateUser: React.FC = () => {
   const {
@@ -27,6 +28,7 @@ const CreateUser: React.FC = () => {
     control,
     formState: { errors },
     register,
+    setValue,
   } = useForm();
   const [isPending, setIsPending] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -76,7 +78,6 @@ const CreateUser: React.FC = () => {
           justifyContent="center"
           alignItems="center"
           flexDirection="column"
-          // width="inherit"
         >
           <ControlledTextField
             name="email"
@@ -135,41 +136,10 @@ const CreateUser: React.FC = () => {
             label="Username"
             rules={{ required: "Username is required" }}
           />
-
-          <Controller
-            name="clients"
+          <ControlledClientSelect
             control={control}
-            defaultValue={[]}
-            rules={{
-              validate: (value) =>
-                value.length > 0 || "At least one client must be selected",
-            }}
-            render={({ field }) => (
-              <FormControl fullWidth error={!!errors.clients}>
-                <InputLabel htmlFor="client-select-list">
-                  Select Allowed Clients
-                </InputLabel>
-                <Select
-                  {...field}
-                  id="client-select-list"
-                  label="Select Allowed Clients"
-                  multiple
-                  defaultValue={[]}
-                >
-                  <MenuItem value={clientList}>Select All</MenuItem>
-                  {clientList.map((client, idx) => (
-                    <MenuItem value={client} key={idx}>
-                      {client}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.clients && (
-                  <FormHelperText error>
-                    {errors.clients.message as React.ReactNode}
-                  </FormHelperText>
-                )}
-              </FormControl>
-            )}
+            errors={errors}
+            setValue={setValue}
           />
           <Controller
             name="userType"
@@ -193,7 +163,6 @@ const CreateUser: React.FC = () => {
                     },
                   }}
                 >
-                  {/* <MenuItem value="none" disabled></MenuItem> */}
                   {userRoles.map((role, idx) => (
                     <MenuItem value={role.value} key={idx}>
                       {role.label}
@@ -202,7 +171,7 @@ const CreateUser: React.FC = () => {
                 </Select>
                 {errors.userType && (
                   <FormHelperText error>
-                    {errors.userType.message as React.ReactNode}
+                    {errors.userType.message as string}
                   </FormHelperText>
                 )}
               </FormControl>

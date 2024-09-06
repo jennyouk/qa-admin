@@ -8,19 +8,12 @@ import {
   RegisterOptions,
 } from "react-hook-form";
 import {
-  //   Box,
-  //   Button,
-  //   CircularProgress,
   Select,
-  //   Typography,
   MenuItem,
   InputLabel,
   FormControl,
   FormHelperText,
 } from "@mui/material";
-// import ControlledTextField from "./ControlledTextField";
-// import Card from "./Card";
-// import { useNavigate } from "react-router-dom";
 
 interface ControlledSelectInputProps {
   control: Control;

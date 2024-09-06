@@ -4,7 +4,6 @@ import {
   Controller,
   SubmitHandler,
   FieldValues,
-  // set,
 } from "react-hook-form";
 import {
   Box,
@@ -16,14 +15,13 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
-  // Switch,
-  // FormLabel,
 } from "@mui/material";
 import ControlledTextField from "./ControlledTextField";
 import Card from "./Card";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { clientList, userRoles } from "../lib/constants";
+import { userRoles } from "../lib/constants";
 import { User } from "../../types";
+import ControlledClientSelect from "./ControlledClientSelect";
 
 const EditUser: React.FC = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -35,16 +33,16 @@ const EditUser: React.FC = () => {
     control,
     formState: { errors },
     register,
+    setValue,
   } = useForm();
 
-  const userId = searchParams.get("id"); // Get the user ID from the URL
-  console.log("userId:", userId);
+  const userId = searchParams.get("id");
 
   useEffect(() => {
     if (!userId) {
       navigate("/admin/search-user");
     }
-    // Fetch user data from backend when the component mounts
+
     const fetchUserData = async () => {
       try {
         const response = await fetch(`http://localhost:3000/users/${userId}`);
@@ -62,7 +60,7 @@ const EditUser: React.FC = () => {
     if (userId) {
       fetchUserData();
     }
-  }, [userId, navigate]); // Fetch data when userId changes
+  }, [userId, navigate]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (
     data: Record<string, unknown>
@@ -94,7 +92,7 @@ const EditUser: React.FC = () => {
   };
 
   if (!userData) {
-    return <CircularProgress />; // Show a loader while fetching user data
+    return <CircularProgress />;
   }
 
   return (
@@ -155,7 +153,7 @@ const EditUser: React.FC = () => {
               name="username"
               control={control}
               register={register}
-              width="50%"
+              width="49%"
               errors={errors}
               label="Username"
               defaultValue={userData.username}
@@ -166,43 +164,11 @@ const EditUser: React.FC = () => {
               Last Password Reset: 2024-06-24{userData.lastPasswordChange}
             </Typography>
           </Box>
-
-          <Controller
-            name="clients"
+          <ControlledClientSelect
             control={control}
+            errors={errors}
             defaultValue={userData.clients}
-            rules={{
-              validate: (value) =>
-                value.length > 0 || "At least one client must be selected",
-            }}
-            render={({ field }) => (
-              <FormControl fullWidth error={!!errors.clients}>
-                <InputLabel
-                  htmlFor="client-select-list"
-                  sx={{ color: "#9E9E9E" }}
-                >
-                  Select Allowed Clients
-                </InputLabel>
-                <Select
-                  {...field}
-                  id="client-select-list"
-                  label="Select Allowed Clients"
-                  multiple
-                  defaultValue={[]}
-                >
-                  {clientList.map((client, idx) => (
-                    <MenuItem value={client} key={idx}>
-                      {client}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.clients && (
-                  <FormHelperText error>
-                    {errors.clients.message as React.ReactNode}
-                  </FormHelperText>
-                )}
-              </FormControl>
-            )}
+            setValue={setValue}
           />
           <Controller
             name="userType"
@@ -231,7 +197,6 @@ const EditUser: React.FC = () => {
                     },
                   }}
                 >
-                  {/* <MenuItem value="none" disabled></MenuItem> */}
                   {userRoles.map((role, idx) => (
                     <MenuItem value={role.value} key={idx}>
                       {role.label}
@@ -240,81 +205,12 @@ const EditUser: React.FC = () => {
                 </Select>
                 {errors.userRole && (
                   <FormHelperText error>
-                    {errors.userRole.message as React.ReactNode}
+                    {errors.userRole.message as string}
                   </FormHelperText>
                 )}
               </FormControl>
             )}
           />
-          <Typography variant="body2" sx={{ color: "#9E9E9E" }}>
-            Last Login: 2024-09-03{userData.lastLogin}
-          </Typography>
-          {/* <Controller
-            name="active"
-            control={control}
-            defaultValue={userData.active}
-            render={({ field }) => (
-              <FormControl error={!!errors.active}>
-                <FormLabel htmlFor="active-switch" sx={{ color: "#9E9E9E" }}>
-                  {userData.active ? "Deactivate" : "Activate"}
-                  <Switch
-                    {...field}
-                    id="active-switch"
-                    checked={userData.active}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                      setUserData({ ...userData, active: event.target.checked })
-                    }
-                  />
-                </FormLabel>
-              </FormControl>
-            )}
-          /> */}
-          {/* <Controller
-            name="active"
-            control={control}
-            defaultValue={userData.active}
-            rules={{
-              validate: (value) =>
-                value !== "" || "Active status must be selected",
-            }}
-            render={({ field }) => (
-              <FormControl error={!!errors.userType} fullWidth>
-                <InputLabel
-                  htmlFor="active-select-list"
-                  sx={{ color: "#9E9E9E" }}
-                >
-                  Active Status
-                </InputLabel>
-                <Select
-                  {...field}
-                  id="active-select-list"
-                  label="User Status"
-                  // defaultValue={userData.active ? "Active" : "Deactivated"}
-
-                  sx={{
-                    color: field.value === "none" ? "#9E9E9E" : "black",
-                    "&.Mui-error .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "error.main",
-                    },
-                  }}
-                >
-                  {[
-                    { value: "active", label: "Active" },
-                    { value: "deactived", label: "Deactived" },
-                  ].map((item, idx) => (
-                    <MenuItem value={item.value.toString()} key={idx}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.active && (
-                  <FormHelperText error>
-                    {errors.active.message as React.ReactNode}
-                  </FormHelperText>
-                )}
-              </FormControl>
-            )}
-          /> */}
           <Controller
             name="active"
             control={control}
@@ -331,8 +227,8 @@ const EditUser: React.FC = () => {
                   {...field}
                   id="active-select-list"
                   label="Active Status"
-                  onChange={(e) => field.onChange(e.target.value === "active")} // Here we transform the value before passing it
-                  value={field.value ? "active" : "deactivated"} // Handle how the value is displayed based on the boolean
+                  onChange={(e) => field.onChange(e.target.value === "active")}
+                  value={field.value ? "active" : "deactivated"}
                   sx={{
                     color: field.value === "none" ? "#9E9E9E" : "black",
                     "&.Mui-error .MuiOutlinedInput-notchedOutline": {
@@ -345,26 +241,15 @@ const EditUser: React.FC = () => {
                 </Select>
                 {errors.active && (
                   <FormHelperText error>
-                    {errors.active.message as React.ReactNode}
+                    {errors.active.message as string}
                   </FormHelperText>
                 )}
               </FormControl>
             )}
           />
-          {/* <Button
-            disabled={!userData.active}
-            variant="contained"
-            onClick={() => {
-              setUserData((prev) => {
-                if (prev) {
-                  return { ...prev, active: false };
-                }
-                return prev;
-              });
-            }}
-          >
-            Deactivate User
-          </Button> */}
+          <Typography variant="body2" sx={{ color: "#9E9E9E" }}>
+            Last Login: 2024-09-03{userData.lastLogin}
+          </Typography>
           <Box display="flex" gap="16px" my={2}>
             <Button type="submit" disabled={isPending} variant="contained">
               {isPending ? (

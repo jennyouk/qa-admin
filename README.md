@@ -12,7 +12,6 @@ The 'Bulk Create User' and 'Bulk Edit User' pages allow for local file selection
 
 For the mock up, upload and save brings the user to a submitted page that randomly shows success or error messages.
 
-## In Progress Features
-
-- Select All Allowed Clients option is in progress
-- Generic ControlledSelectInput is in progress as well
+## In Progress Features/Initiatives
+- Generic ControlledSelectInput is in progress
+- Remove repetitive code
