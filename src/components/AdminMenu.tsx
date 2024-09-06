@@ -2,7 +2,6 @@ import { Typography, Grid, CardActionArea, Icon } from "@mui/material";
 import Card from "./Card";
 import { menuList } from "../lib/menu";
 import { useNavigate } from "react-router-dom";
-// import React from "react";
 
 export default function AdminMenu() {
   const navigate = useNavigate();

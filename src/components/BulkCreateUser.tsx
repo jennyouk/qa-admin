@@ -23,7 +23,6 @@ const BulkCreateUser: React.FC = () => {
   const navigate = useNavigate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.files);
     setSelectedFile(event.target.files![0]);
   };
 
@@ -120,7 +119,6 @@ const BulkCreateUser: React.FC = () => {
             )}
           </Button>
         </Box>
-        {/* </Box> */}
       </form>
     </Card>
   );

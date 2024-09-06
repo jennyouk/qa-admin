@@ -37,7 +37,6 @@ export default function SearchUser() {
       alert("Please enter at least one field to search");
       return;
     }
-    console.log(query);
     try {
       const response = await fetch(`http://localhost:3000/users?${query}`, {
         method: "GET",

@@ -51,7 +51,7 @@ const EditUser: React.FC = () => {
         }
         const data = await response.json();
         setUserData(data.user);
-        console.log("data:", data);
+        console.log("Received user data:", data);
       } catch (error) {
         console.error("Failed to fetch user data", error);
       }
@@ -66,7 +66,7 @@ const EditUser: React.FC = () => {
     data: Record<string, unknown>
   ) => {
     setIsPending(true);
-    console.log("submitting", data);
+    console.log("submitting user data:", data);
     try {
       const response = await fetch(`http://localhost:3000/users/${userId}`, {
         method: "PUT",

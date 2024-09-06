@@ -1,7 +1,6 @@
-// backend/server.js
 import express from "express";
 import cors from "cors";
-import db from "./database.js"; // Ensure the correct file extension
+import db from "./database.js";
 import { createObjectCsvStringifier } from "csv-writer";
 
 const app = express();
@@ -52,7 +51,7 @@ app.get("/users", (req, res) => {
   const { email, firstName, lastName, username } = req.query;
 
   // Build the query dynamically
-  let query = "SELECT * FROM users WHERE 1=1"; // 1=1 is a common trick to simplify appending conditions
+  let query = "SELECT * FROM users WHERE 1=1";
   const params = [];
 
   if (email) {
@@ -96,7 +95,6 @@ app.get("/users/:id", (req, res) => {
       try {
         row.clients = JSON.parse(row.clients);
       } catch (error) {
-        // Handle error if clients is not properly formatted
         row.clients = [];
       }
     }
@@ -162,13 +160,11 @@ app.get("/export", (req, res) => {
       return;
     }
 
-    // Extract the column ids dynamically
     const headers = columns.map((col) => ({
-      id: col.name, // Column name
-      title: col.name, // Column name as title, you can customize if needed
+      id: col.name,
+      title: col.name,
     }));
 
-    // Create CSV stringifier with dynamic headers
     const csvStringifier = createObjectCsvStringifier({
       header: headers,
     });
@@ -180,12 +176,10 @@ app.get("/export", (req, res) => {
         return;
       }
 
-      // Convert the rows to CSV format
       const csvContent =
         csvStringifier.getHeaderString() +
         csvStringifier.stringifyRecords(rows);
 
-      // Set response headers and send the CSV file
       res.setHeader("Content-disposition", "attachment; filename=users.csv");
       res.set("Content-Type", "text/csv");
       res.status(200).send(csvContent);
