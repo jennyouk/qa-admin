@@ -52,7 +52,7 @@ const ExportUsers: React.FC = () => {
       <Grid
         container
         columnSpacing={1}
-        width={{ xs: "100%", md: "80%" }}
+        width={{ xs: "90%", md: "80%" }}
         sx={{ padding: { xs: 1, md: 3 }, my: 1, border: "1px dashed grey" }}
       >
         <Grid size={{ xs: 12, sm: 8 }} display="flex" alignItems="center">
@@ -61,7 +61,7 @@ const ExportUsers: React.FC = () => {
           </Typography>
         </Grid>
         <Grid
-          size={{ xs: 12, sm: 8 }}
+          size={{ xs: 12, sm: 4 }}
           display="flex"
           justifyContent={{ xs: "center", sm: "flex-end" }}
         >
