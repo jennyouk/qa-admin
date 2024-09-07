@@ -1,10 +1,10 @@
-# version: '3'
-# services:
-#   app:
-#     build: .
-#     volumes:
-#       - ./mock-server:/usr/src/app/mock-server
-#     ports:
-#       - "3000:3000"
-#     command: ["node", "mock-server/server.js"] # Override ENTRYPOINT if needed
-#     # If you need to handle environment variables or other configurations, add them here.
+version: '3'
+services:
+  app:
+    build: .
+    volumes:
+      - ./mock-server:/usr/src/app/mock-server
+    ports:
+      - "3000:3000"
+    command: ["node", "mock-server/server.js"] # Override ENTRYPOINT if needed
+    # If you need to handle environment variables or other configurations, add them here.
