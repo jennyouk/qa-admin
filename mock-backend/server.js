@@ -8,6 +8,14 @@ app.use(express.json());
 app.use(cors());
 const port = 3000;
 
+// Serve static files from the 'dist' directory
+app.use(express.static('dist'));
+
+// Handle requests for the root path
+app.get('/', (req, res) => {
+  res.sendFile('index.html', { root: __dirname });
+});
+
 // Create a new user
 app.post("/users", (req, res) => {
   const {
