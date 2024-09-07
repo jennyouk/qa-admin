@@ -45,7 +45,7 @@ const EditUser: React.FC = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/users/${userId}`);
+        const response = await fetch(`/users/${userId}`);
         if (!response.ok) {
           throw new Error(`Error fetching user: ${response.statusText}`);
         }
@@ -68,7 +68,7 @@ const EditUser: React.FC = () => {
     setIsPending(true);
     console.log("submitting user data:", data);
     try {
-      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+      const response = await fetch(`/users/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

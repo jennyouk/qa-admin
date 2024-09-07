@@ -38,7 +38,7 @@ export default function SearchUser() {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:3000/users?${query}`, {
+      const response = await fetch(`/users?${query}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

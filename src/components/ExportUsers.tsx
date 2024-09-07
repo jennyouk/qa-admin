@@ -11,7 +11,7 @@ const ExportUsers: React.FC = () => {
   const onClick = async () => {
     setIsPending(true);
     try {
-      const response = await fetch("http://localhost:3000/export", {});
+      const response = await fetch("/export", {});
       if (!response.ok) {
         navigate("/admin/submitted", {
           state: {

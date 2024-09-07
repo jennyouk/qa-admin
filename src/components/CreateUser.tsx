@@ -44,7 +44,7 @@ const CreateUser: React.FC = () => {
       active: true,
     };
     try {
-      const response = await fetch("http://localhost:3000/users", {
+      const response = await fetch("/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
