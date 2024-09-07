@@ -19,7 +19,7 @@ import {
 import ControlledTextField from "./ControlledTextField";
 import Card from "./Card";
 import { useNavigate } from "react-router-dom";
-import { userRoles } from "../lib/constants";
+import { userRoles, API_BASE_URL } from "../lib/constants";
 import ControlledClientSelect from "./ControlledClientSelect";
 
 const CreateUser: React.FC = () => {
@@ -44,7 +44,7 @@ const CreateUser: React.FC = () => {
       active: true,
     };
     try {
-      const response = await fetch("/users", {
+      const response = await fetch(`${API_BASE_URL}/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -4,7 +4,7 @@ COPY . /usr/src/app
 RUN npm install
 RUN npm run build
 # below would be for typical docker implementation
-EXPOSE 3000
+EXPOSE 5001
 ENTRYPOINT ["node", "./mock-backend/server.js"]
 
 # below would be to implement with heroku registry (where expose and entrypoint are not allowed)

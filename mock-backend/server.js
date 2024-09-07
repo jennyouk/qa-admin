@@ -6,7 +6,7 @@ import { createObjectCsvStringifier } from "csv-writer";
 const app = express();
 app.use(express.json());
 app.use(cors());
-const PORT = process.env.PORT || 5001 // changed to 5001 for heroku
+const PORT = process.env.PORT || 5001 // changed to for heroku hosting
 
 // Serve static files from the 'dist' directory
 app.use(express.static('dist'));

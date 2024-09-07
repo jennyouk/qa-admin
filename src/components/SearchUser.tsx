@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Card from "./Card";
-import { Typography, Box, Button, Grid } from "@mui/material";
+import { Typography, Box, Button } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import ControlledTextField from "./ControlledTextField";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import CircularProgress from "@mui/material/CircularProgress";
 import { User } from "../../types";
 import StartIcon from "@mui/icons-material/Start";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../lib/constants";
 
 function cleanData(data: Record<string, string>): Record<string, string> {
   return Object.fromEntries(
@@ -38,7 +40,7 @@ export default function SearchUser() {
       return;
     }
     try {
-      const response = await fetch(`/users?${query}`, {
+      const response = await fetch(`${API_BASE_URL}/users?${query}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -136,19 +138,18 @@ export default function SearchUser() {
             Results
           </Typography>
           <Grid container columns={12}>
-            <Grid container item xs={12} sx={{ fontWeight: 600 }}>
-              <Grid item xs={5}>
+            <Grid container size={12} sx={{ fontWeight: 600 }}>
+              <Grid size={5}>
                 Email
               </Grid>
-              <Grid item xs={3}>
+              <Grid size={3}>
                 First Name
               </Grid>
-              <Grid item xs={2}>
+              <Grid size={2}>
                 Last Name
               </Grid>
               <Grid
-                item
-                xs={2}
+                size={2}
                 display="flex"
                 justifyContent="end"
                 textAlign="right"
@@ -157,10 +158,9 @@ export default function SearchUser() {
               </Grid>
             </Grid>
             {foundUsers.map((user: User, idx) => (
-              <Grid container key={idx} alignItems="center">
+              <Grid container size={12} key={idx} alignItems="center">
                 <Grid
-                  item
-                  xs={5}
+                  size={5}
                   sx={{
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -170,8 +170,7 @@ export default function SearchUser() {
                   {user.email}
                 </Grid>
                 <Grid
-                  item
-                  xs={3}
+                  size={3}
                   sx={{
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -181,8 +180,7 @@ export default function SearchUser() {
                   {user.firstName}
                 </Grid>
                 <Grid
-                  item
-                  xs={3}
+                  size={3}
                   sx={{
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -191,7 +189,7 @@ export default function SearchUser() {
                 >
                   {user.lastName}
                 </Grid>
-                <Grid item xs={1}>
+                <Grid size={1}>
                   <Button
                     onClick={() => navigate(`/admin/edit-user?id=${user.id}`)}
                   >

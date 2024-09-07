@@ -5,6 +5,6 @@ services:
     volumes:
       - ./mock-server:/usr/src/app/mock-server
     ports:
-      - "3000:3000"
+      - "5001:5001"
     command: ["node", "mock-server/server.js"] # Override ENTRYPOINT if needed
     # If you need to handle environment variables or other configurations, add them here.

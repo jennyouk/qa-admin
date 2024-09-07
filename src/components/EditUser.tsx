@@ -19,7 +19,7 @@ import {
 import ControlledTextField from "./ControlledTextField";
 import Card from "./Card";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { userRoles } from "../lib/constants";
+import { userRoles, API_BASE_URL } from "../lib/constants";
 import { User } from "../../types";
 import ControlledClientSelect from "./ControlledClientSelect";
 
@@ -45,7 +45,7 @@ const EditUser: React.FC = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`/users/${userId}`);
+        const response = await fetch(`${API_BASE_URL}/users/${userId}`);
         if (!response.ok) {
           throw new Error(`Error fetching user: ${response.statusText}`);
         }
@@ -68,7 +68,7 @@ const EditUser: React.FC = () => {
     setIsPending(true);
     console.log("submitting user data:", data);
     try {
-      const response = await fetch(`/users/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

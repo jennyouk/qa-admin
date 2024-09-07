@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, Box, CircularProgress, Typography, Grid } from "@mui/material";
+import { Button, Box, CircularProgress, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import Card from "./Card";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
@@ -55,19 +56,17 @@ const BulkCreateUser: React.FC = () => {
         Bulk Edit Users
       </Typography>
       <form onSubmit={handleSubmit} style={{ width: "80%" }}>
-      <Grid
+        <Grid
           container
           columnSpacing={1}
           sx={{ padding: { xs: 1, md: 3 }, my: 1, border: "1px dashed grey" }}
         >
           <Grid
-            item
-            xs={12}
-            md={8}
+            size={{ xs: 12, md: 8 }}
             display="flex"
             flexDirection="column"
             alignItems={{ xs: "center", md: "flex-start" }}
-            sx={{ mb: { xs: 2, md: 0 }}}
+            sx={{ mb: { xs: 2, md: 0 } }}
           >
             <Typography variant="body1">
               Upload updated user details as CSV file
@@ -77,9 +76,7 @@ const BulkCreateUser: React.FC = () => {
             </Typography>
           </Grid>
           <Grid
-            item
-            xs={12}
-            md={4}
+            size={{ xs: 12, md: 4 }}
             display="flex"
             justifyContent={{ xs: "center", md: "flex-end" }}
           >

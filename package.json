@@ -7,7 +7,7 @@
     "node": "20.x"
   },
   "scripts": {
-    "dev": "concurrently \"node mock-backend/server.js\" \"vite\"",
+    "dev": "NODE_ENV=development concurrently \"node mock-backend/server.js\" \"vite\"",
     "start": "node mock-backend/server.js",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

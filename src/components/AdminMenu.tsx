@@ -1,4 +1,5 @@
-import { Typography, Grid, CardActionArea, Icon } from "@mui/material";
+import { Typography, CardActionArea, Icon } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import Card from "./Card";
 import { menuList } from "../lib/menu";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +14,7 @@ export default function AdminMenu() {
       </Typography>
       <Grid container >
         {menuList.map((item, index) => (
-          <Grid key={index} item xs={12} sm={6} md={4}>
+          <Grid key={index} size={{ xs: 12, sm: 6, md: 4 }}>
             <CardActionArea
               sx={{ padding: 3 }}
               onClick={() => navigate(`/admin/${item.link}`)}
