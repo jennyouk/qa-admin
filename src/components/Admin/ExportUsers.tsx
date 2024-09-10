@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Button, CircularProgress, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid2";
-import Card from "./Card";
+import { Button, CircularProgress, Typography, Grid } from "@mui/material";
+// import Grid from "@mui/material/Grid2";
+import Card from "../Card";
 import { useNavigate } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/Download";
-import { API_BASE_URL } from "../lib/constants";
+import { API_BASE_URL } from "../../helpers/AdminPlaceholderVals";
 
 const ExportUsers: React.FC = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -55,13 +55,23 @@ const ExportUsers: React.FC = () => {
         width={{ xs: "90%", md: "80%" }}
         sx={{ padding: { xs: 1, md: 3 }, my: 1, border: "1px dashed grey" }}
       >
-        <Grid size={{ xs: 12, sm: 8 }} display="flex" alignItems="center">
+        <Grid
+          item
+          xs={12}
+          md={8}
+          // size={{ xs: 12, sm: 8 }}
+          display="flex"
+          alignItems="center"
+        >
           <Typography variant="body1">
             Export all user and user details as a CSV file
           </Typography>
         </Grid>
         <Grid
-          size={{ xs: 12, sm: 4 }}
+          item
+          xs={12}
+          md={4}
+          // size={{ xs: 12, sm: 4 }}
           display="flex"
           justifyContent={{ xs: "center", sm: "flex-end" }}
         >

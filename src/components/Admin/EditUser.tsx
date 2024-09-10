@@ -16,12 +16,12 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
-import ControlledTextField from "./ControlledTextField";
-import Card from "./Card";
+import ControlledTextField from "../Inputs/ControlledTextField";
+import Card from "../Card";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { userRoles, API_BASE_URL } from "../lib/constants";
-import { User } from "../../types";
-import ControlledClientSelect from "./ControlledClientSelect";
+import { userRoles, API_BASE_URL } from "../../helpers/AdminPlaceholderVals";
+import { User } from "../../../types";
+import ControlledClientSelect from "../Inputs/ControlledClientSelect";
 
 const EditUser: React.FC = () => {
   const [isPending, setIsPending] = useState<boolean>(false);

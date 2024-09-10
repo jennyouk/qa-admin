@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box } from "@mui/material";
-import MenuDrawer from "../components/MenuDrawer";
+import MenuDrawer from "../components/Admin/MenuDrawer";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";

@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
-import Card from "./Card";
+import Card from "../Card";
 import { useNavigate } from "react-router-dom";
 
 const SubmitScreen: React.FC = () => {

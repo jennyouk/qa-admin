@@ -12,7 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { menuList } from "../lib/menu";
+import { menuList } from "../../helpers/AdminMenuOptions";
 
 interface MenuDrawerProps {
   variant: "permanent" | "temporary";

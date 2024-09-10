@@ -16,11 +16,11 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
-import ControlledTextField from "./ControlledTextField";
-import Card from "./Card";
+import ControlledTextField from "../Inputs/ControlledTextField";
+import Card from "../Card";
 import { useNavigate } from "react-router-dom";
-import { userRoles, API_BASE_URL } from "../lib/constants";
-import ControlledClientSelect from "./ControlledClientSelect";
+import { userRoles, API_BASE_URL } from "../../helpers/AdminPlaceholderVals";
+import ControlledClientSelect from "../Inputs/ControlledClientSelect";
 
 const CreateUser: React.FC = () => {
   const {

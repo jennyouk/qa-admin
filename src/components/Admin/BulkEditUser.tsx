@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button, Box, CircularProgress, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid2";
-import Card from "./Card";
+import { Button, Box, CircularProgress, Typography, Grid } from "@mui/material";
+// import Grid from "@mui/material/Grid2";
+import Card from "../Card";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -37,15 +37,11 @@ const BulkCreateUser: React.FC = () => {
       setTimeout(() => {
         navigate("/admin/submitted", {
           state: isSuccessful
-            ? {
-                success: true,
-                message:
-                  "Example success message: 15 users created successfully",
-              }
+            ? { success: true, message: "12 users updated successfully" }
             : {
                 success: false,
                 message:
-                  "[Example failure message] Failed to add rows 5, 7, 9 due to incomplete user details or duplicate username or email fields. Please check user details for those rows and resubmit.",
+                  "Failed to update rows 2, 3, 6. Please check user details for those rows and resubmit",
               },
         });
       }, 500);
@@ -57,7 +53,7 @@ const BulkCreateUser: React.FC = () => {
   return (
     <Card>
       <Typography variant="h3" my={2}>
-        Bulk Create Users
+        Bulk Edit Users
       </Typography>
       <form onSubmit={handleSubmit} style={{ width: "80%" }}>
         <Grid
@@ -66,21 +62,27 @@ const BulkCreateUser: React.FC = () => {
           sx={{ padding: { xs: 1, md: 3 }, my: 1, border: "1px dashed grey" }}
         >
           <Grid
-            size={{ xs: 12, md: 8 }}
+            item
+            xs={12}
+            md={8}
+            // size={{ xs: 12, md: 8 }}
             display="flex"
             flexDirection="column"
             alignItems={{ xs: "center", md: "flex-start" }}
-            sx={{ mb: { xs: 2, md: 0 }}}
+            sx={{ mb: { xs: 2, md: 0 } }}
           >
             <Typography variant="body1">
-              Upload CSV file of users and user details.
+              Upload updated user details as CSV file
             </Typography>
             <Typography variant="body2" color="primary">
               {selectedFile !== null && `${selectedFile.name} selected`}
             </Typography>
           </Grid>
           <Grid
-            size={{ xs: 12, md: 4}}
+            item
+            xs={12}
+            md={4}
+            // size={{ xs: 12, md: 4 }}
             display="flex"
             justifyContent={{ xs: "center", md: "flex-end" }}
           >
@@ -90,19 +92,16 @@ const BulkCreateUser: React.FC = () => {
               variant="contained"
               tabIndex={-1}
               startIcon={<CloudUploadIcon />}
-              sx={{ whiteSpace: "nowrap" }}
+              sx={{
+                whiteSpace: "nowrap",
+              }}
             >
-              Select File
+              Select file
               <VisuallyHiddenInput type="file" onChange={handleFileChange} />
             </Button>
           </Grid>
         </Grid>
-        <Box width="100%" display="flex" justifyContent="center">
-          <Typography variant="body2">
-            Tip: <a href="">Download</a> the CSV template file to get started.
-          </Typography>
-        </Box>
-        <Box display="flex" justifyContent="center" alignItems="center" mt={6}>
+        <Box display="flex" justifyContent="center" alignItems="center" mt={8}>
           <Button
             type="submit"
             disabled={isPending}

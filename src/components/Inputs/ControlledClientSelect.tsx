@@ -8,7 +8,7 @@ import {
   FormHelperText,
   SelectChangeEvent,
 } from "@mui/material";
-import { clientList } from "../lib/constants";
+import { clientList } from "../../helpers/AdminPlaceholderVals";
 
 interface ControlledClientSelectProps {
   control: Control;
